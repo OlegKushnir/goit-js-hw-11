@@ -27,6 +27,7 @@ export default class FetchService {
 
     const response = await axios.get(url);
 
+  
     if (response.data.totalHits === 0) {
       Notify.failure(
         'Sorry, there are no images matching your search query. Please try again.'
