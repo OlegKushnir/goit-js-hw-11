@@ -1,18 +1,18 @@
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
-import SimpleLightbox from "simplelightbox";
-import "simplelightbox/dist/simple-lightbox.min.css";
-import FetchService from "./js/FetchService";   
-
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
+import FetchService from './js/FetchService';
 
 const formRef = document.querySelector('#search-form');
 const galleryRef = document.querySelector('.gallery');
 const loadMoreBtn = document.querySelector('.load-more');
 
-
 const fetchService = new FetchService();
-let gallery = new SimpleLightbox('.gallery a', { captionsData: 'alt',
-    captionPosition:'bottom', captionDelay: 250});
-
+let gallery = new SimpleLightbox('.gallery a', {
+  captionsData: 'alt',
+  captionPosition: 'bottom',
+  captionDelay: 250,
+});
 
 formRef.addEventListener('submit', onSearchBtn);
 loadMoreBtn.addEventListener('click', onLoadMore);
@@ -27,21 +27,18 @@ async function onSearchBtn(evt) {
   }
   try {
     const response = await fetchService.onFetchPixabay();
-    renderMarkup(response);
+    const data = renderMarkup(response);
     loadMoreBtn.classList.remove('ishidden');
-  }
-  catch (error) {
+  } catch (error) {
     console.log(error.message);
-  };
+  }
 }
 
 function renderMarkup(images) {
   const markup = images
     .map(
       image =>
-   
-        (
-            image = `<a  href="${image.largeImageURL}">
+        (image = `<a  href="${image.largeImageURL}">
             <div class="thumb">            
             <img src="${image.webformatURL}" alt="${image.tags}" loading="lazy"  />
             </div>
@@ -59,36 +56,29 @@ function renderMarkup(images) {
                 <span><b>Downloads</b></span><span>${image.downloads}</span> 
               </p>
             </div>
-          </a>`
-        )
+          </a>
+          
+          `)
     )
     .join('');
-    galleryRef.insertAdjacentHTML("beforeend",markup);
-    gallery.refresh();
-
+  galleryRef.insertAdjacentHTML('beforeend', markup);
+  gallery.refresh();
 }
 
 async function onLoadMore() {
   try {
     const response = await fetchService.onFetchPixabay();
-    if(response.length === 0) {
-      Notify.info(
-        "We're sorry, but you've reached the end of search results."
-      );
+    if (response.length === 0) {
+      Notify.info("We're sorry, but you've reached the end of search results.");
       loadMoreBtn.classList.add('ishidden');
     }
     renderMarkup(response);
-  }
-  catch (error) {
+  } catch (error) {
     console.log(error.message);
-  };
-
+  }
 }
 
 function clearMarkup() {
-    galleryRef.innerHTML = '';
-    loadMoreBtn.classList.add('ishidden');
+  galleryRef.innerHTML = '';
+  loadMoreBtn.classList.add('ishidden');
 }
-
-
-
