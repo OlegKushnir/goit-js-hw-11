@@ -26,7 +26,6 @@ export default class FetchService {
     const url = `?key=${KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&page=${this.page}&per_page=40`;
 
     const response = await axios.get(url);
-
   
     if (response.data.totalHits === 0) {
       Notify.failure(
